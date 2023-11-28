@@ -1,0 +1,56 @@
+{
+    "name": "paynl/request-signing",
+    "description": "A package to sign and verify request sent by PAY.",
+    "type": "library",
+    "license": "proprietary",
+    "minimum-stability": "stable",
+    "authors": [
+        {
+            "name": "Kevin Jansen",
+            "email": "k.jansen@pay.nl",
+            "role": "Maintainer"
+        },
+        {
+            "name": "Wesley de Kanter",
+            "email": "wesley@pay.nl",
+            "role": "Maintainer"
+        }
+    ],
+    "support" : {
+        "email" : "support@pay.nl"
+    },
+    "require": {
+        "php": "^7.4 | ^8",
+        "psr/http-factory": "^1.0",
+        "paynl/psr-server-request": "^1.0"
+    },
+    "require-dev": {
+        "psr/http-message": "^2.0",
+        "phpstan/phpstan": "^1.10",
+        "phpunit/phpunit": "^9",
+        "squizlabs/php_codesniffer": "^3.7",
+        "php-coveralls/php-coveralls": "^2.7",
+        "phpunit/phpcov": "^8.2"
+    },
+    "autoload": {
+        "psr-4": {
+            "PayNL\\RequestSigning\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "PayNL\\RequestSigning\\Tests\\": "tests/"
+        }
+    },
+    "scripts": {
+        "phpcs": "vendor/bin/phpcs --standard=phpcs.xml",
+        "phpcbf" : "vendor/bin/phpcbf",
+        "phpstan": "vendor/bin/phpstan",
+        "phpunit" : "vendor/bin/phpunit",
+        "phpunit-clover": "XDEBUG_MODE=coverage vendor/bin/phpunit --coverage-clover build/logs/clover.xml",
+        "analyse": [
+            "@phpcs",
+            "@phpstan"
+        ]
+    }
+}
