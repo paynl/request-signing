@@ -9,10 +9,10 @@ use Psr\Http\Message\RequestInterface;
 
 interface RequestSigningMethodInterface
 {
-    public const SIGNATURE_HEADER = 'Signature';
-    public const SIGNATURE_KEY_ID_HEADER = 'Signature-KeyID';
-    public const SIGNATURE_METHOD_HEADER = 'Signature-Method';
-    public const SIGNATURE_ALGORITHM_HEADER = 'Signature-Algorithm';
+    public const SIGNATURE_HEADER = 'signature';
+    public const SIGNATURE_KEY_ID_HEADER = 'signature-keyid';
+    public const SIGNATURE_METHOD_HEADER = 'signature-method';
+    public const SIGNATURE_ALGORITHM_HEADER = 'signature-algorithm';
 
     /**
      * Generate a signature for a given request using the specified key and algorithm.
