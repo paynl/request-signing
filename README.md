@@ -16,7 +16,7 @@ To install this package you need:
 ## Installation
 
 ```
-composer require paynl/psr-server-request
+composer require paynl/request-signing
 ```
 
 ## Usage
