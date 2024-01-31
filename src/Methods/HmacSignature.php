@@ -63,21 +63,12 @@ final class HmacSignature implements RequestSigningMethodInterface
 
         $algorithm = strtolower($algorithm);
 
-        if (in_array($algorithm, hash_algos()) === false) {
+        if (in_array($algorithm, hash_hmac_algos()) === false) {
             throw UnsupportedHashingAlgorithmException::forAlgorithm($algorithm);
         }
 
-        $generatedSignature = hash($algorithm, implode(
-            ':',
-            [
-                $key->getId(),
-                $key->getSecret(),
-                $body,
-            ]
-        ));
-
         return new SignatureData(
-            $generatedSignature,
+            hash_hmac($algorithm, $body, $key->getSecret()),
             $keyId,
             $algorithm,
             self::METHOD_NAME
@@ -102,7 +93,7 @@ final class HmacSignature implements RequestSigningMethodInterface
                 ->generateSignature((string) $request->getBody(), $keyId, $algorithm)
                 ->getSignature();
 
-            return $signature === $generatedSignature;
+            return hash_equals($signature, $generatedSignature);
         } catch (Throwable $throwable) {
             // We do nothing with the exception. The request stays marked as "invalid".
         }

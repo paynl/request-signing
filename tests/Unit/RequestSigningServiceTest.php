@@ -69,7 +69,7 @@ final class RequestSigningServiceTest extends TestCase
             ->withHeader(RequestSigningMethodInterface::SIGNATURE_KEY_ID_HEADER, self::SIGNATURE_KEY_ID)
             ->withHeader(
                 RequestSigningMethodInterface::SIGNATURE_HEADER,
-                '6086a395c7fe9b47f47cee4623b76cc4cc79cb3f44e968091edc447cfe7e7533dc2564f49b22bc1f225c24f172be0d2a5b5893e0825c6fde782a63f3e43ce7d1'
+                '1e23c01aec9410779fb4efdcd8582ff66d3d8f99b17060272d564e05c33b475770ce5d2277ee4fb1917c0716e10d1533f4b4925e4870e2cd1f0884f12f1de793'
             );
     }
 
