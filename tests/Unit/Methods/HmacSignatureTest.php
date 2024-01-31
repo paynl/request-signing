@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace PayNL\RequestSigning\Tests\Unit\Methods;
 
 use Nyholm\Psr7\Request;
-use PayNL\RequestSigning\Constant\SignatureAlgorithm;
 use PayNL\RequestSigning\Constant\SignatureMethodEnum;
 use PayNL\RequestSigning\Exception\SignatureKeyNotFoundException;
 use PayNL\RequestSigning\Exception\UnsupportedHashingAlgorithmException;
@@ -32,12 +31,25 @@ final class HmacSignatureTest extends TestCase
         $signingMethod = new HmacSignature($this->getKeyRepository($this->getDummySignatureKey()));
 
         // Next, we'll sign a dummy request
-        $signedRequest = $signingMethod->sign($this->getDummyRequest(), self::SIGNATURE_KEY_ID, self::SIGNATURE_ALGORITHM);
+        $signedRequest = $signingMethod->sign(
+            $this->getDummyRequest(),
+            self::SIGNATURE_KEY_ID,
+            self::SIGNATURE_ALGORITHM
+        );
 
         $this->assertInstanceOf(RequestInterface::class, $signedRequest);
-        $this->assertEquals(self::SIGNATURE_KEY_ID, $signedRequest->getHeaderLine(RequestSigningMethodInterface::SIGNATURE_KEY_ID_HEADER));
-        $this->assertEquals(self::SIGNATURE_ALGORITHM, $signedRequest->getHeaderLine(RequestSigningMethodInterface::SIGNATURE_ALGORITHM_HEADER));
-        $this->assertEquals(SignatureMethodEnum::HMAC, $signedRequest->getHeaderLine(RequestSigningMethodInterface::SIGNATURE_METHOD_HEADER));
+        $this->assertEquals(
+            self::SIGNATURE_KEY_ID,
+            $signedRequest->getHeaderLine(RequestSigningMethodInterface::SIGNATURE_KEY_ID_HEADER)
+        );
+        $this->assertEquals(
+            self::SIGNATURE_ALGORITHM,
+            $signedRequest->getHeaderLine(RequestSigningMethodInterface::SIGNATURE_ALGORITHM_HEADER)
+        );
+        $this->assertEquals(
+            SignatureMethodEnum::HMAC,
+            $signedRequest->getHeaderLine(RequestSigningMethodInterface::SIGNATURE_METHOD_HEADER)
+        );
         $this->assertNotEmpty($signedRequest->getHeaderLine(RequestSigningMethodInterface::SIGNATURE_HEADER));
     }
 
@@ -48,7 +60,8 @@ final class HmacSignatureTest extends TestCase
     {
         $this->expectException(UnsupportedHashingAlgorithmException::class);
 
-        (new HmacSignature($this->getKeyRepository($this->getDummySignatureKey())))->sign($this->getDummyRequest(), self::SIGNATURE_KEY_ID, 'Unknown Algorithm');
+        (new HmacSignature($this->getKeyRepository($this->getDummySignatureKey())))
+            ->sign($this->getDummyRequest(), self::SIGNATURE_KEY_ID, 'Unknown Algorithm');
     }
 
     public function testItCanVerifyAGivenRequest(): void
@@ -86,7 +99,8 @@ final class HmacSignatureTest extends TestCase
     {
         // Next, we'll mock a repository that throws an "SignatureKeyNotFound" exception
         $repository = $this->createMock(HmacSignatureKeyRepositoryInterface::class);
-        $repository->method('findOneById')->willThrowException(SignatureKeyNotFoundException::forKeyId(self::SIGNATURE_KEY_ID));
+        $repository->method('findOneById')
+            ->willThrowException(SignatureKeyNotFoundException::forKeyId(self::SIGNATURE_KEY_ID));
 
         // Next, we'll instantiate the HmacSignature class
         $hmacSignature = new HmacSignature($repository);
@@ -121,7 +135,7 @@ final class HmacSignatureTest extends TestCase
             ->withHeader(RequestSigningMethodInterface::SIGNATURE_KEY_ID_HEADER, self::SIGNATURE_KEY_ID)
             ->withHeader(
                 RequestSigningMethodInterface::SIGNATURE_HEADER,
-                '6086a395c7fe9b47f47cee4623b76cc4cc79cb3f44e968091edc447cfe7e7533dc2564f49b22bc1f225c24f172be0d2a5b5893e0825c6fde782a63f3e43ce7d1'
+                '1e23c01aec9410779fb4efdcd8582ff66d3d8f99b17060272d564e05c33b475770ce5d2277ee4fb1917c0716e10d1533f4b4925e4870e2cd1f0884f12f1de793'
             );
     }
 
