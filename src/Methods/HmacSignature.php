@@ -37,7 +37,7 @@ final class HmacSignature implements RequestSigningMethodInterface
      */
     public function sign(RequestInterface $request, string $keyId, string $algorithm): RequestInterface
     {
-        $signatureData = $this->generateSignature((string)$request->getBody(), $keyId, $algorithm);
+        $signatureData = $this->generateSignature((string) $request->getBody(), $keyId, $algorithm);
 
         return $request
             ->withHeader(RequestSigningMethodInterface::SIGNATURE_HEADER, $signatureData->getSignature())
@@ -90,10 +90,10 @@ final class HmacSignature implements RequestSigningMethodInterface
             $algorithm = $request->getHeaderLine(RequestSigningMethodInterface::SIGNATURE_ALGORITHM_HEADER);
 
             $generatedSignature = $this
-                ->generateSignature((string)$request->getBody(), $keyId, $algorithm)
+                ->generateSignature((string) $request->getBody(), $keyId, $algorithm)
                 ->getSignature();
 
-            return hash_equals($signature, $generatedSignature) || $this->doFallbackVerification($request);
+            return hash_equals($signature, $generatedSignature);
         } catch (Throwable $throwable) {
             // We do nothing with the exception. The request stays marked as "invalid".
         }
@@ -104,41 +104,5 @@ final class HmacSignature implements RequestSigningMethodInterface
     public function supports(string $method): bool
     {
         return strtolower(self::METHOD_NAME) === strtolower($method);
-    }
-
-    /**
-     * Since we've moved away from hash() signing in favor of hash_hmac we should (for now) support the
-     * hash verification method to keep older implementations valid
-     *
-     * @throws UnsupportedHashingAlgorithmException
-     * @throws SignatureKeyNotFoundException
-     */
-    private function doFallbackVerification(RequestInterface $request): bool
-    {
-        $keyId = $request->getHeaderLine(RequestSigningMethodInterface::SIGNATURE_KEY_ID_HEADER);
-        $signature = $request->getHeaderLine(RequestSigningMethodInterface::SIGNATURE_HEADER);
-        $algorithm = $request->getHeaderLine(RequestSigningMethodInterface::SIGNATURE_ALGORITHM_HEADER);
-
-        $key = $this->signatureKeyRepository->findOneById($keyId);
-
-        $algorithm = strtolower($algorithm);
-
-        if (in_array($algorithm, hash_algos()) === false) {
-            throw UnsupportedHashingAlgorithmException::forAlgorithm($algorithm);
-        }
-
-        $generatedSignature = hash(
-            $algorithm,
-            implode(
-                ':',
-                [
-                    $key->getId(),
-                    $key->getSecret(),
-                    (string)$request->getBody(),
-                ]
-            )
-        );
-
-        return hash_equals($signature, $generatedSignature);
     }
 }
