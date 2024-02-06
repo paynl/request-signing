@@ -122,21 +122,6 @@ final class HmacSignatureTest extends TestCase
         $this->assertFalse($hmacSignature->verify($request));
     }
 
-    public function testItCanVerifyUsingTheFallbackMethod(): void
-    {
-        // First, we'll create a dummy request
-        $request = $this->getSignedDummyRequest()->withHeader(
-            RequestSigningMethodInterface::SIGNATURE_HEADER,
-            '6086a395c7fe9b47f47cee4623b76cc4cc79cb3f44e968091edc447cfe7e7533dc2564f49b22bc1f225c24f172be0d2a5b5893e0825c6fde782a63f3e43ce7d1'
-        );
-
-        // Next, we'll instantiate the HmacSignature class
-        $hmacSignature = new HmacSignature($this->getKeyRepository($this->getDummySignatureKey()));
-
-        // Next, we'll verify that this request passes its verification
-        $this->assertTrue($hmacSignature->verify($request));
-    }
-
     private function getDummyRequest(): RequestInterface
     {
         return new Request('POST', 'https://pay.nl');

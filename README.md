@@ -23,12 +23,12 @@ composer require paynl/request-signing
 
 The `PayNL\RequestSigning\RequestSigningService` simplifies both signing and verifying requests, avoiding the need for manual class instantiation. 
 
-The constructor function of this service requires an array of _SingingMethods_ that you wish to support. Each signing method has different needs and functionality, and which one(s) you opt to support falls under your discretion.
+The constructor function of this service requires an array of _SigningMethods_ that you wish to support. Each signing method has different needs and functionality, and which one(s) you opt to support falls under your discretion.
 
 By providing the service with the array of these chosen methods, the service can handle the configuration and functionality. This decouples the setup process from your main application logic, allowing a more streamlined integration.
 
 ### Signing
-The below code snippet shows the basis of singing a request using this package:
+The below code snippet shows the basis of signing a request using this package:
 
 ```php
 use PayNL\RequestSigning\RequestSigningService;
@@ -73,7 +73,7 @@ $requestValid = $signingService->verify($request);
 
 The request signing service and the underlying signing / verifying methods may throw exceptions when unexpected values are encountered, these are:
 - SignatureKeyNotFound, this exception must be thrown when the implementation of the `PayNL\RequestSigning\Repository\SignatureKeyRepositoryInterface` can not find the key based on the provided id;
-- UnknownSigningMethodException, this exception will be thrown by the singing / verifying methods when they are requested to sign / verify a request with an algorithm they do not support;
+- UnknownSigningMethodException, this exception will be thrown by the signing / verifying methods when they are requested to sign / verify a request with an algorithm they do not support;
 - UnsupportedHashingAlgorithmException, this exception will be thrown by the `PayNL\RequestSigning\RequestSigningService` when it is requested to sign / verify a request with a method it doesn't support.
 
 ### Supported Signing / Verifying methods
